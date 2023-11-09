@@ -110,3 +110,169 @@ class MyApp extends StatelessWidget {
 }
 ```
 8. Terakhir, saya membuat repositori github baru untuk menyimpan proyek mywardrobe_mobile ini. Tidak lupa, saya commit dan push ke repo tersebut.
+
+
+# Tugas :eight:
+
+## Pertanyaan
+### 1. Jelaskan perbedaan antara Navigator.push() dan Navigator.pushReplacement(), disertai dengan contoh mengenai penggunaan kedua metode tersebut yang tepat!
+- *Navigator.push()*
+Digunakan untuk mendorong halaman baru ke atas stack navigator, sehingga mempertahankan halaman sebelumnya. User dapat kembali ke halaman sebelumnya dengan menggunakan tombol back atau jika secara eksplisit dipanggil Navigator.pop(). Metode ini berguna ketika ingin memungkinkan user untuk melakukan navigasi "back" melalui stack navigasi. 
+```dart
+Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => NewPage()),
+);
+```
+- *Navigator.pushReplacement()*
+Menggantikan halaman saat ini di stack dengan halaman baru. Halaman sebelumnya akan dihapus dari stack sehingga user tidak bisa kembali ke halaman tersebut. Ini berguna saat mengganti layar, seperti navigasi dari layar login ke dashboard utama setelah berhasil login, di mana tidak ingin user kembali ke layar login.
+```dart
+Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => NewPage()),
+);
+```
+
+### 2. Jelaskan masing-masing layout widget pada Flutter dan konteks penggunaannya masing-masing!
+-  *GridView*
+Membuat grid dua dimensi dari widget anak-anaknya.
+Digunakan untuk menampilkan data dalam bentuk grid seperti galeri gambar atau keyboard virtual.
+- *ListView*
+Membuat list scrollable dari widget anak-anaknya.
+Digunakan untuk membuat list yang panjang dan bisa discroll seperti daftar chat atau feed berita.
+- *Column*
+Mengatur anak-anaknya secara vertikal dalam sebuah kolom tunggal.
+Digunakan untuk tampilan yang membutuhkan susunan vertikal seperti formulir atau list.
+- *Row*
+Mengatur anak-anaknya secara horizontal dalam sebuah baris tunggal.
+Digunakan untuk layout yang membutuhkan susunan horizontal seperti toolbar atau status bar.
+- *Stack*
+Memungkinkan anak-anaknya ditumpuk satu di atas yang lain.
+Digunakan untuk overlay, seperti menempatkan badge di atas ikon.
+- *Container*
+Widget yang menggabungkan common painting, positioning, dan sizing widgets.
+Digunakan sebagai blok bangunan dasar untuk membuat bentuk, mengatur padding, margin, menambahkan background, dll.
+- *Padding*
+Memberikan padding pada widget anaknya.
+Digunakan untuk memberi ruang tambahan di sekitar widget tertentu.
+- *Align*
+Menyamakan widget anaknya sesuai dengan parameter alignment yang diberikan.
+Digunakan untuk menempatkan widget pada posisi tertentu dalam container yang lebih besar.
+
+### 3. Sebutkan apa saja elemen input pada form yang kamu pakai pada tugas kali ini dan jelaskan mengapa kamu menggunakan elemen input tersebut!
+- *TextFormField untuk "Clothing Item"*
+Digunakan agar user bisa memasukkan nama item pakaian dengan tipe text biasa.
+Validator digunakan untuk memastikan bahwa field tidak kosong.
+- *TextFormField untuk "Amount"*
+Digunakan agar user bisa memasukkan jumlah item pakaian dalam bentuk angka numerik.
+Validator memeriksa apabila input kekosongan dan memastikan bahwa nilai yang dimasukkan adalah angka.
+- *TextFormField untuk "Description"*
+Digunakan untuk memasukkan deskripsi item pakaian berbentuk teks.
+Validator digunakan untuk memastikan bahwa deskripsi tidak kosong.
+
+### 4. Bagaimana penerapan clean architecture pada aplikasi Flutter?
+Penerapan _Clean Architecture_ pada aplikasi Flutter melibatkan pemisahan kode menjadi lapisan yang berbeda dengan tanggung jawab yang jelas, meningkatkan maintainability dan testability.
+Prinsip umum _Clean Architecture_ di Flutter:
+1. Independent of Frameworks: logika bisnis aplikasi harus bersifat independen dan tidak terikat pada Flutter itu sendiri.
+2. Testable: logika bisnis dapat diuji tanpa UI, database, server, atau tools eksternal lainnya.
+3. Independent of UI: UI bisa berubah tanpa mempengaruhi lapisan lainnya. 
+4. Independent of Database: database bisa diganti tanpa mengubah logika bisnis.
+5. Independent of any external agency: logika bisnis tidak harus tahu tentang hal yang berada di luar seperti database atau Web API.
+
+Dalam implementasi di tugas ini, saya memisahkan kode menjadi beberapa direktori, seperti `lib/screens` dan `lib/widgets`. Dengan demikian, memudahkan pengelolaan kode, pengujian, dan pemeliharaan jangka panjang aplikasi.
+
+## Step-by-step
+- Membuat halaman baru pada aplikasi: Saya membuat file `wardrobeitem_list_form.dart` pada direnktori `lib/screens`.
+
+Elemen input yang saya buat adalah name, amount, dan description dengan TextFormField yang dibungkus Padding. 
+
+Saya juga menambah tombol save untuk menyimpan input dari form.
+```dart
+child: const Text(
+  "Save",
+  style: TextStyle(color: Colors.white),
+)
+```
+
+Setiap elemen input di formulir divalidasi agar tidak kosong dan sesuai data type modelnya.
+```dart
+validator: (String? value) { // validasi data type
+  if (value == null || value.isEmpty) { // validasi input tidak kosong
+    return "Error Message"; 
+  }
+  if (int.tryParse(value) == null) {
+    return "Amount has to be a number!"; // Contoh validasi data type untuk integer
+  }
+  return null;
+},
+```
+
+- Mengarahkan pengguna ke halaman form tambah item baru ketika menekan tombol `Add New Item` pada halaman utama.
+```dart
+if (item.name == "Add New Item") {
+  Navigator.push(context,
+    MaterialPageRoute(builder: (context) => const WardrobeFormPage()));
+}
+```
+Saya menggunakan navigator pust untuk navigasi ke page forms ketika card Add New Item ditekan.
+
+- Memunculkan data sesuai isi dari formulir yang diisi dalam sebuah pop-up setelah menekan tombol Save pada halaman formulir tambah item baru.
+Ketika pengguna menekan tombol `Save`, aplikasi akan melakukan validasi dan jika semua data benar, aplikasi akan menampilkan dialog pop-up dengan data yang sesuai dengan apa yang telah diisi pengguna dalam form tersebut. Tombol `OK` ketika ditekan, akan menutup dialog dengan memanggil Navigator.pop(context), yang menghapus AlertDialog dari tampilan. Setelah dialog ditampilkan, `_formKey.currentState!.reset()` membersihkan form, sehingga formulir bersih dari data sebelumnya.
+```dart
+onPressed: () {
+  if (_formKey.currentState!.validate()) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Produk berhasil tersimpan'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text('Clothing Item: $_name'),
+                Text('Amount: $_amount'),
+                Text('Description: $_description')
+              ],),),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },),],);},);
+  _formKey.currentState!.reset(); }},
+```
+
+- Membuat sebuah drawer
+Saya membuat file `left_drawer.dart` pada lib/widgets. 
+Lalu, saya membuat 2 opsi untuk ke halaman utama dan tambah item dalam ListTile anak dari ListView.
+Ketika salah satu opsi ditekan, `Navigator.pushReplacement` akan navigasi ke halaman yang sesuai.
+```dart
+Widget build(BuildContext context) {
+  return Drawer(
+    child: ListView(
+      children: [
+        ...
+        ListTile(
+          leading: const Icon(Icons.home_outlined),
+          title: const Text('Halaman Utama'),
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(),
+                ));
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.add_box_rounded),
+          title: const Text('Add New Item'),
+          onTap: () {
+            Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WardrobeFormPage(),)); 
+        },),],),);}
+```
+

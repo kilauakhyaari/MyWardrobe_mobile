@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mywardrobe_mobile/widgets/left_drawer.dart';
+import 'package:mywardrobe_mobile/widgets/wardrobe_card.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
 
   final List<WardrobeItem> items = [
     WardrobeItem("Lihat Item", Icons.checkroom_rounded, Colors.red.shade200),
-    WardrobeItem("Tambah Item", Icons.add_box_rounded,Colors.cyan.shade200),
+    WardrobeItem("Add New Item", Icons.add_box_rounded,Colors.cyan.shade200),
     WardrobeItem("Logout", Icons.logout, Colors.lime.shade200),
   ];
 
@@ -16,7 +18,10 @@ class MyHomePage extends StatelessWidget {
         title: const Text(
           'My Wardrobe',
         ),
+        backgroundColor: Colors.red[300],
+        foregroundColor: Colors.red[100],
       ),
+      drawer: const LeftDrawer(),
       body: SingleChildScrollView(
         // Widget wrapper yang dapat discroll
         child: Padding(
@@ -58,55 +63,3 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class  WardrobeItem {
-  final String name;
-  final IconData icon;
-  final Color color;
-
-  WardrobeItem(this.name, this.icon, this.color);
-}
-
-class WardrobeCard extends StatelessWidget {
-  final WardrobeItem item;
-
-  const WardrobeCard(this.item, {super.key}); // Constructor
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color,
-      child: InkWell(
-        // Area responsive terhadap sentuhan
-        onTap: () {
-          // Memunculkan SnackBar ketika diklik
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
-        },
-        child: Container(
-          // Container untuk menyimpan Icon dan Text
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 50.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
