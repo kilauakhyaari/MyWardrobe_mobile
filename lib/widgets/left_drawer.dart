@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mywardrobe_mobile/screens/list_product.dart';
 import 'package:mywardrobe_mobile/screens/menu.dart';
 import 'package:mywardrobe_mobile/screens/wardrobeitem_list_form.dart';
 
@@ -60,6 +61,17 @@ class LeftDrawer extends StatelessWidget {
               ));
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.checkroom_rounded),
+            title: const Text('List of Clothes'),
+            onTap: () {
+                // Route menu ke halaman produk
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProductPage()),
+                );
+            },
+        ),
         ],
       ),
     );

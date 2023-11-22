@@ -7,7 +7,7 @@ class MyHomePage extends StatelessWidget {
 
   final List<WardrobeItem> items = [
     WardrobeItem("Lihat Item", Icons.checkroom_rounded, Colors.red.shade200),
-    WardrobeItem("Add New Item", Icons.add_box_rounded,Colors.cyan.shade200),
+    WardrobeItem("Add New Item", Icons.add_box_rounded,const Color.fromRGBO(128, 222, 234, 1)),
     WardrobeItem("Logout", Icons.logout, Colors.lime.shade200),
   ];
 
